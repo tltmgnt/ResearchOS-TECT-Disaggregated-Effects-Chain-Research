@@ -1,0 +1,1 @@
+import{mkdir,copyFile}from'node:fs/promises';await mkdir('dist/docs',{recursive:true});for(const n of ['index.html','app.mjs','model.mjs','style.css','example.json'])await copyFile(n,'dist/'+n);await copyFile('docs/SCOPE.md','dist/docs/SCOPE.md');console.log('Static notebook in dist/. Serve over localhost or HTTPS.');

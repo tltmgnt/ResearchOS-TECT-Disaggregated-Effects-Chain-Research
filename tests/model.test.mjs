@@ -1,0 +1,10 @@
+import{test}from'node:test';import assert from'node:assert/strict';import{validate,summarize,csv}from'../model.mjs';
+const base=()=>({version:1,name:'Test',records:[{id:'A',title:'Public document review',architecture:'',interfaceNotes:'',uncertainty:'',reviewer:'',rationale:'',status:'draft',evidence:[]}]});
+test('missing documentation flagged',()=>{const r=summarize(base())[0];assert.equal(r.flags.length,5);assert.equal(r.evidenceCount,0);});
+test('review requires reviewer and rationale',()=>{const s=base();s.records[0].status='reviewed';assert.throws(()=>validate(s));s.records[0].reviewer='Owner';s.records[0].rationale='Documentation inspected';assert.doesNotThrow(()=>validate(s));});
+test('review never suppresses missing evidence',()=>{const s=base(),r=s.records[0];r.status='reviewed';r.reviewer='Owner';r.rationale='Limitations documented';assert.ok(summarize(s)[0].flags.includes('Source reference missing'));});
+test('synthetic evidence remains flagged',()=>{const s=base();s.records[0].evidence=[{reference:'Fictional',basis:'synthetic',note:''}];assert.ok(summarize(s)[0].flags.includes('Includes synthetic evidence'));});
+test('invalid records rejected',()=>{for(const change of [s=>s.records.push({...s.records[0]}),s=>s.records[0].status='approved',s=>s.records[0].evidence=[{reference:'X',basis:'verified',note:''}],s=>s.name='']){const s=base();change(s);assert.throws(()=>validate(s));}});
+test('empty notebook supported',()=>{const s=base();s.records=[];assert.deepEqual(summarize(s),[]);});
+test('CSV neutralizes formulas and quotes',()=>{const s=base();s.records[0].title='=1+1';assert.ok(csv(summarize(s)).includes("\"'=1+1\""));});
+test('summary deterministic and nonmutating',()=>{const s=base(),copy=structuredClone(s);assert.deepEqual(summarize(s),summarize(s));assert.deepEqual(s,copy);});
