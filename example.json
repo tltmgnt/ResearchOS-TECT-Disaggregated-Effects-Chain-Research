@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "name": "Synthetic architecture review notebook",
+  "records": [
+    {
+      "id": "review-001",
+      "title": "Public research document exchange",
+      "architecture": "Fictional independent teams exchange published research summaries.",
+      "interfaceNotes": "Record schema version, units, provenance and missing-field handling for document exchange.",
+      "uncertainty": "Evidence completeness and applicability are unknown; no operational inference.",
+      "reviewer": "",
+      "rationale": "",
+      "status": "draft",
+      "evidence": [
+        {
+          "reference": "Synthetic tabletop note 1",
+          "basis": "synthetic",
+          "note": "Fictional example for reviewing documentation quality."
+        }
+      ]
+    }
+  ]
+}
